@@ -14,7 +14,7 @@ import { JwtStrategy } from './jwt.strategy';
     JwtModule.registerAsync({
       useFactory: () => ({
         secret: process.env.JWT_SECRET,
-        signOptions: { expiresIn: process.env.JWT_EXPIRES || '30m' }
+        signOptions: { expiresIn: process.env.JWT_EXPIRES || '10m' }
       })
     }),
     TypeOrmModule.forFeature([User])
