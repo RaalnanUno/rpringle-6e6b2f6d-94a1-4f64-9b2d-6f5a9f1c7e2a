@@ -1,0 +1,9 @@
+{
+  "name": "@rpringle-6e6b2f6d-94a1-4f64-9b2d-6f5a9f1c7e2a/data",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "dependencies": {}
+}

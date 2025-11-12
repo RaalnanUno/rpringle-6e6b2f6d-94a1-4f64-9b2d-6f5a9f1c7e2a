@@ -1,0 +1,190 @@
+{
+  "main": {
+    "id": "348a56cfe7f10686",
+    "type": "split",
+    "children": [
+      {
+        "id": "89fcce6dfeb58ade",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "76cb8b8807ba4e96",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "prompt.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "prompt"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "87ddd6c1bed366d4",
+    "type": "split",
+    "children": [
+      {
+        "id": "9c7860d5c9247fc1",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5955a698c33c72b5",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "0f25d11f387c939e",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "f8d69db45c435ca3",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "65f9ccad8d4e7b49",
+    "type": "split",
+    "children": [
+      {
+        "id": "8e74562ae19ed7cd",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "5eddce7766148ec0",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "prompt.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks for prompt"
+            }
+          },
+          {
+            "id": "0436e59723b0e047",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "prompt.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from prompt"
+            }
+          },
+          {
+            "id": "99f64cdba0b2df97",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "846980f1ba39df98",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "prompt.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of prompt"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "76cb8b8807ba4e96",
+  "lastOpenFiles": [
+    "dev.sqlite-journal",
+    "dev.sqlite",
+    "dist/apps/api/app/rbac/audit-logger.js",
+    "dist/apps/api/app/rbac/audit-logger.js.map",
+    "dist/apps/api/seed.js",
+    "dist/apps/api/seed.js.map",
+    "dist/apps/api/main.js",
+    "dist/apps/api/main.js.map",
+    "dist/apps/api/app/app.module.js",
+    "dist/apps/api/app/app.module.js.map",
+    "dist/apps/api/app/rbac/rbac.guard.js",
+    "package.md",
+    "prompt.md",
+    "apps/api/tsconfig.app.md",
+    "_md/Project Structure Analysis.md"
+  ]
+}
