@@ -172,6 +172,7 @@
   "active": "76cb8b8807ba4e96",
   "lastOpenFiles": [
     "dev.sqlite-journal",
+    "audit.log",
     "dev.sqlite",
     "dist/apps/api/app/rbac/audit-logger.js",
     "dist/apps/api/app/rbac/audit-logger.js.map",
@@ -181,7 +182,6 @@
     "dist/apps/api/main.js.map",
     "dist/apps/api/app/app.module.js",
     "dist/apps/api/app/app.module.js.map",
-    "dist/apps/api/app/rbac/rbac.guard.js",
     "package.md",
     "prompt.md",
     "apps/api/tsconfig.app.md",

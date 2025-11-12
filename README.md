@@ -1,96 +1,233 @@
-# Rpringle6e6b2f6d94a14f649b2d6f5a9f1c7e2a
+# Tasks API (NestJS + TypeORM + JWT + RBAC)
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+A minimal task API demonstrating:
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+* **NestJS** + **TypeORM** (SQLite dev; can point at MSSQL/PG)
+* **JWT auth** (HS256) with **role** + **orgId** claims
+* **RBAC per route** via `@RequireAction('Resource.Action')`
+* **Org scope** checks (Owner inherits Admin/Viewer; Owner@root can see children)
+* **File-based audit log** (newline-delimited JSON)
+* **Swagger UI** and **OpenAPI JSON** (served dynamically)
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Quick Start
 
-## Run tasks
+```bash
+# 1) Install
+npm i
 
-To run tasks with Nx use:
+# 2) Set env (create .env in repo root)
+#   JWT_SECRET=super-long-random-string
+#   JWT_EXPIRES=30m
+#   SQLITE_PATH=./dev.sqlite
+#   AUDIT_LOG_PATH=./audit.log
 
-```sh
-npx nx <target> <project-name>
+# 3) Dev serve (rebuild + restart on change)
+npm run dev:api
+
+# 4) Build once
+npm run build:api
+
+# 5) Run built output
+npm run start:api
 ```
 
-For example:
+## URLs
 
-```sh
-npx nx build myproject
+* App: `http://localhost:3333`
+* Swagger UI: `http://localhost:3333/api`
+* **OpenAPI JSON**: `http://localhost:3333/api-json`  ← (there’s no physical `swagger.json`; it’s served dynamically)
+
+## Environment Variables
+
+Create a `.env` file (same folder as `package.json`):
+
+```
+JWT_SECRET=REPLACE_WITH_A_LONG_RANDOM_SECRET
+JWT_EXPIRES=30m
+SQLITE_PATH=./dev.sqlite
+AUDIT_LOG_PATH=./audit.log
+PORT=3333
 ```
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+Tip: Generate a secret quickly:
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-To install a new plugin you can use the `nx add` command. Here's an example of adding the React plugin:
-```sh
-npx nx add @nx/react
+```bash
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-Use the plugin's generator to create new projects. For example, to create a new React app or library:
+## Seed Data
 
-```sh
-# Generate an app
-npx nx g @nx/react:app demo
+On first boot, the app seeds:
 
-# Generate a library
-npx nx g @nx/react:lib some-lib
+* **Root Org** (id=1)
+* **Owner user**: `admin@example.com` / `changeme`
+
+> You’ll see `[seed] Created Owner admin@example.com / changeme` in logs on first run.
+
+## Auth Flow (Login → Bearer token → Authorized calls)
+
+1. **Login**:
+
+```
+POST /auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "changeme"
+}
 ```
 
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
+Response:
 
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
+```json
+{
+  "accessToken": "<JWT>",
+  "user": { "id":1, "email":"admin@example.com", "displayName":"Admin", "role":"Owner", "orgId":1 }
+}
 ```
 
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
+2. **Use the token** in subsequent requests:
 
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+* **Authorization header**: `Authorization: Bearer <JWT>`
+  (exactly one space, no quotes)
 
-### Step 2
+3. **Create a task**:
 
-Use the following command to configure a CI workflow for your workspace:
+```
+POST /tasks
+Authorization: Bearer <JWT>
+Content-Type: application/json
 
-```sh
-npx nx g ci-workflow
+{
+  "title": "My First Task",
+  "description": "created via API",
+  "category": "Work",
+  "status": "Todo"
+}
 ```
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Expected: `201 Created` with the task payload.
 
-## Install Nx Console
+### Postman tip (variables)
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+* Create a **Postman Environment**, add a variable named `token`.
+* In your login request, add a **Tests** script to capture the token:
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+  ```js
+  const json = pm.response.json();
+  pm.environment.set('token', json.accessToken);
+  ```
+* In other requests, set **Auth → Type: Bearer Token** and set **Token** to `{{token}}`.
+  (Do **not** include the word “Bearer” there—Postman adds it for you.)
 
-## Useful links
+If you prefer raw headers, use:
 
-Learn more:
+```
+Authorization: Bearer {{token}}
+```
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/intro#learn-nx?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## RBAC & Org Scope
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+* Roles: **Viewer** < **Admin** < **Owner** (Owner inherits Admin & Viewer)
+* Actions:
+
+  * `Task.Create`, `Task.Read`, `Task.Update`, `Task.Delete`
+  * `Audit.View`
+* `@RequireAction('...')` on controller methods declares the required permission.
+* **List** endpoints enforce org scope in the **service** (filter query by allowed orgIds).
+* **Object-level** endpoints (PUT/DELETE) load the entity, then attach `req.rbac.resourceOrgId = entity.orgId` so the guard can enforce scope.
+
+## Audit Log
+
+* Location: `AUDIT_LOG_PATH` (default `./audit.log`)
+* Format: one JSON object per line:
+
+  ```json
+  {"ts":"2025-11-11T19:05:00.000Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Create","entity":"Task","entityId":"1","outcome":"allow"}
+  ```
+* `GET /audit-log` (Owner/Admin) supports filters (`from`, `to`, `userId`, `action`, `orgId`, `limit`, `offset`).
+
+## Swagger/OpenAPI
+
+* UI: `/api`
+* Spec JSON: **`/api-json`**
+
+  * Example: `curl http://localhost:3333/api-json > openapi.json`
+
+> You can import `openapi.json` into Postman or code generators to bootstrap clients.
+
+---
+
+## Why JWT “duplication” on .NET too?
+
+It’s not duplication of *state*, it’s duplication of *verification logic*. In any system with more than one service (Nest, ASP.NET Core, Go, etc.), **each resource server must validate tokens** that hit it. Otherwise, a compromised client could bypass your checks by calling the other API.
+
+You have options to reduce “surface area”:
+
+* **Centralize issuing** the token (an Identity Provider):
+
+  * Azure AD / Entra ID, Auth0, IdentityServer, Keycloak, etc.
+  * Your APIs then **only** verify signatures and claims; they don’t mint tokens.
+* Prefer **asymmetric** JWTs in multi-service setups:
+
+  * Use **RS256** (private key signs; APIs verify with **public key/JWKS URL**).
+  * Then each API doesn’t need the private secret—only the public key.
+* Keep **claims minimal** and standard (e.g., `sub`, `role`, `orgId`, `email`).
+* Enforce **authorization/RBAC inside each API** (your `RequireAction` pattern).
+
+Right now your Nest app uses **HS256** with `JWT_SECRET` (shared secret). If you add an ASP.NET API that also accepts the same tokens, you either:
+
+* Share the same secret (okay for simple dev setups), or
+* Switch to RS256 w/ JWKS and point both apps to the same JWKS URL (preferred for multi-service prod).
+
+---
+
+## Porting to ASP.NET Core (MSSQL)
+
+This project already maps cleanly to ASP.NET Core:
+
+* **Entities** → EF Core models
+* **`@RequireAction` + guard** → `[RequireAction]` attribute + `IAuthorizationHandler`
+* **Org scope** → helper that returns allowed orgIds; apply in queries
+* **Audit** → same file-based MVP (or a DB table / log sink later)
+* **Swagger** → Swashbuckle at `/swagger` and JSON at `/swagger/v1/swagger.json`
+* **JWT** → mirror the same claims (`sub`, `role`, `orgId`, `email`) and expiration
+
+When you’re ready, I can generate a matching ASP.NET Core solution scaffold (files/paths ready to paste), wired for MSSQL and Swashbuckle, using the exact RBAC/org-scope pattern.
+
+---
+
+## Troubleshooting
+
+* **401 “Invalid or missing authentication token”**
+
+  * Ensure header is exactly `Authorization: Bearer <token>` (no quotes).
+  * If using Postman variables, set **Auth → Bearer Token** with `{{token}}`
+    and store `token` from the login response test script.
+* **Empty array after POST**:
+
+  * Usually means the request lacked a valid token (guard short-circuited),
+    or Postman placed the token in Params rather than Auth/Headers.
+* **Seeding repeats**:
+
+  * It only seeds when the DB is empty. Delete `dev.sqlite` to re-seed.
+
+---
+
+## Scripts
+
+* `npm run dev:api` – watch build + run the compiled server
+* `npm run build:api` – compile to `dist/apps/api`
+* `npm run start:api` – run the compiled server
+* `npm run lint` / `npm run test` – standard Nx lint/test
+
+---
+
+## Future Enhancements
+
+* Switch HS256 → **RS256** + JWKS for multi-service verification
+* Move audit logs to DB or log sink (ELK/Splunk/AppInsights)
+* Add **refresh tokens** & rotation
+* Add **rate limiting** / login attempt throttling
+* Replace SQLite with **MSSQL** in dev to mirror prod closer

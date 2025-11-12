@@ -1,0 +1,9 @@
+{"ts":"2025-11-12T00:18:30.613Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:21:43.339Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:22:07.268Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:22:46.066Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:25:48.085Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:40:24.312Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Create","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:42:41.365Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Create","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:43:13.730Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Create","entity":"Task","outcome":"allow"}
+{"ts":"2025-11-12T00:44:25.930Z","userId":"1","role":"Owner","orgId":"1","action":"Task.Read","entity":"Task","outcome":"allow"}
